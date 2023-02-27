@@ -8,7 +8,7 @@ EASY_SQUARES = 30
 MEDIUM_SQUARES = 45
 HARD_SQUARES = 60
 EXTREME_SQUARES = 75
-
+file=open("ahmed.txt","w")
 
 def create_board():
     board=[]
@@ -38,20 +38,21 @@ def fill_sudoku(sudoku):
     return True
 #called in text file by give it board from previous function 
 
-def print_board(board):
-    """Print the Sudoku board."""
-    print('-' * 35)
-    for i in range(BOARD_SIZE):
-        for j in range(BOARD_SIZE):
-            print(board[i][j], end='  ')
-            if (j + 1) % 3 == 0 and j != BOARD_SIZE - 1:
-                print('||', end='  ')
+def write_board(board):
+    # Write the Sudoku board to a text file
+    with open("sudoku_game.txt", 'w') as f:
+        f.write('-' * 35 + '\n')
+        for i in range(BOARD_SIZE):
+            for j in range(BOARD_SIZE):
+                f.write(str(board[i][j]) + '  ')
+                if (j + 1) % 3 == 0 and j != BOARD_SIZE - 1:
+                    f.write('||  ')
             
-        print()
-        print()
-        if (i + 1) % 3 == 0 and i != BOARD_SIZE - 1:
-            print('-' * 35)
-    print('-' * 35)       
+            f.write('\n\n')
+            if (i + 1) % 3 == 0 and i != BOARD_SIZE - 1:
+                f.write('-' * 35 + '\n')
+        f.write('-' * 35 + '\n')
+      
 
 
 def get_difficulty_level():
@@ -74,8 +75,9 @@ def remove_squares(board, num_squares):
         col = square % BOARD_SIZE   ##1 to 9 only
         board[row][col] = "#"
 
-if __name__=="__main__":
-    
+
+
+if __name__=="__main__":    
  board = create_board()
  fill_sudoku(board)
  
@@ -89,9 +91,8 @@ if __name__=="__main__":
     remove_squares(board, HARD_SQUARES)
  else:
      remove_squares(board, EXTREME_SQUARES)
- 
- print_board(board)
 
+ write_board(board)
 
 
 
