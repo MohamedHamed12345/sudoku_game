@@ -1,6 +1,6 @@
 
 import random
-
+from file_operations import read_board , write_board
 BOARD_SIZE = 9
 
 # Define the number of squares to remove for each difficulty level
@@ -40,20 +40,20 @@ def fill_sudoku(sudoku):
     return True
 #called in text file by give it board from previous function 
 
-def write_board(board):
-    # Write the Sudoku board to a text file
-    with open("sudoku_game.txt", 'w') as f:
-        f.write('-' * 35 + '\n')
-        for i in range(BOARD_SIZE):
-            for j in range(BOARD_SIZE):
-                f.write(str(board[i][j]) + '  ')
-                if (j + 1) % 3 == 0 and j != BOARD_SIZE - 1:
-                    f.write('||  ')
+# def write_board(board):
+#     # Write the Sudoku board to a text file
+#     with open("sudoku_game.txt", 'w') as f:
+#         f.write('-' * 35 + '\n')
+#         for i in range(BOARD_SIZE):
+#             for j in range(BOARD_SIZE):
+#                 f.write(str(board[i][j]) + '  ')
+#                 if (j + 1) % 3 == 0 and j != BOARD_SIZE - 1:
+#                     f.write('||  ')
             
-            f.write('\n\n')
-            if (i + 1) % 3 == 0 and i != BOARD_SIZE - 1:
-                f.write('-' * 35 + '\n')
-        f.write('-' * 35 + '\n')
+#             f.write('\n\n')
+#             if (i + 1) % 3 == 0 and i != BOARD_SIZE - 1:
+#                 f.write('-' * 35 + '\n')
+#         f.write('-' * 35 + '\n')
       
 
 
@@ -78,13 +78,19 @@ def remove_squares(board, num_squares):
         board[row][col] = "#"
 
 def check_solution(board):
-    rows = [[] for i in range(9)]
-    cols =[[] for i in range(9)]
-    board3x3 = [[] for i in range(9)]
+    rows = {}
+    cols ={}
+    board3x3 ={}
+    for i in range(3):
+        for j in range(3):board3x3[(i,j)]=[]
+    for i in range(9):rows[i]=[];cols[i]=[]
+    print(*board3x3)
     for i in range(9):
         for j in range(9):
             element=board[i][j]
-            if  element in rows[i] or element in cols[j] or element in board3x3[(i//3, j//3)]:return False
+            
+ 
+            if  (element in rows[i] )or (element in cols[j]) or element in board3x3[(i//3,j//3)]:return False
             rows[i].append(board[i][j])
             cols[j].append(board[i][j])
             board3x3[(i//3, j//3)].append(board[i][j])
@@ -104,8 +110,28 @@ def main():
         remove_squares(board, HARD_SQUARES)
     else:
         remove_squares(board, EXTREME_SQUARES)
-
+    # print(board)
     write_board(board)
+    print('you can write your solution in solution file and ')
+    
+    x=input('enter  any letter  to continue')
+
+    b=read_board()
+   
+    if len(b) !=9:
+        print(*b)
+        exit()
+       
+    if check_solution(b):
+        print("right solution")
+
+    else: 
+        print('wrong solution')
+        print(board)
+  
+   
+
+
 
 
 

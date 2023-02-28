@@ -1,6 +1,6 @@
-def read():
+def read_board():
     grid=[]
-    file=open('out.txt', 'r')
+    file=open('sudoku_game.txt', 'r')
     for line in file:
         if '-' in line:break
     lst=[-1]*9
@@ -9,7 +9,7 @@ def read():
     
         if '-' in line[0]:
             if -1 in lst:
-                return "unfound value "
+                return ["unfound value "]
             grid.append(lst);lst=[-1]*9
             if len(grid)%3==0:file.readline()
             continue
@@ -18,14 +18,13 @@ def read():
             u=unti.strip()
             if  u=='' :    continue
             if not u.isdigit():
-                return "value not a number"
+                return ["value not a number"]
             lst[idx]=int(u)
     return grid 
-# for i in read():
-#     print(i)
+
 def write_board(grid):
   
-    file=open('writed.txt','w')
+    file=open('sudoku_game.txt','w')
     h1="".join((" "+" ".join(['-'*9 for _ in range(3)])+" ") for i in range(3))+'\n'
     h2="".join(("|"+"|".join([' '*9 for _ in range(3)])+"|") for i in range(3))+'\n'
     for h in range(3):
@@ -36,5 +35,3 @@ def write_board(grid):
             file.write(h2*2)
         file.write(h1)
 
-board=read()
-write_board(board)
