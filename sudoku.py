@@ -81,10 +81,11 @@ def check_solution(board):
     rows = {}
     cols ={}
     board3x3 ={}
+    for i in range(9):rows[i]=[];cols[i]=[]
     for i in range(3):
         for j in range(3):board3x3[(i,j)]=[]
-    for i in range(9):rows[i]=[];cols[i]=[]
-    print(*board3x3)
+   
+
     for i in range(9):
         for j in range(9):
             element=board[i][j]
