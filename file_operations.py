@@ -21,3 +21,5 @@ def read():
                 return "value not a number"
             lst[idx]=int(u)
     return grid 
+for i in read():
+    print(i)
