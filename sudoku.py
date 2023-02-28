@@ -10,6 +10,8 @@ HARD_SQUARES = 60
 EXTREME_SQUARES = 75
 file=open("ahmed.txt","w")
 
+# def create_board():return [[0]*9 for i in range(9)]
+
 def create_board():
     board=[]
     for i in range(9):
@@ -75,31 +77,54 @@ def remove_squares(board, num_squares):
         col = square % BOARD_SIZE   ##1 to 9 only
         board[row][col] = "#"
 
+def check_solution(board):
+    rows = [[] for i in range(9)]
+    cols =[[] for i in range(9)]
+    board3x3 = [[] for i in range(9)]
+    for i in range(9):
+        for j in range(9):
+            element=board[i][j]
+            if  element in rows[i] or element in cols[j] or element in board3x3[(i//3, j//3)]:return False
+            rows[i].append(board[i][j])
+            cols[j].append(board[i][j])
+            board3x3[(i//3, j//3)].append(board[i][j])
+    return True
+
+
+def main():
+    board = create_board()
+    fill_sudoku(board)
+    level = get_difficulty_level()
+ 
+    if level == 'easy':
+        remove_squares(board, EASY_SQUARES)
+    elif level == 'medium':
+        remove_squares(board, MEDIUM_SQUARES)
+    elif level == 'hard':
+        remove_squares(board, HARD_SQUARES)
+    else:
+        remove_squares(board, EXTREME_SQUARES)
+
+    write_board(board)
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__=="__main__":    
- board = create_board()
- fill_sudoku(board)
- 
- level = get_difficulty_level()
-
- if level == 'easy':
-    remove_squares(board, EASY_SQUARES)
- elif level == 'medium':
-     remove_squares(board, MEDIUM_SQUARES)
- elif level == 'hard':
-    remove_squares(board, HARD_SQUARES)
- else:
-     remove_squares(board, EXTREME_SQUARES)
-
- write_board(board)
-
-
-
-
-
-
-
-
-
-
+    main()
+    while True:
+        x=input('Do you want to play again :Y or N ?')
+        if x.lower()=='y':
+            main()
+        else:
+            print('Game over')
+            break
+        
