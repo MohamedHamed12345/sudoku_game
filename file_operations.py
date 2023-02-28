@@ -21,5 +21,20 @@ def read():
                 return "value not a number"
             lst[idx]=int(u)
     return grid 
-for i in read():
-    print(i)
+# for i in read():
+#     print(i)
+def write_board(grid):
+  
+    file=open('writed.txt','w')
+    h1="".join((" "+" ".join(['-'*9 for _ in range(3)])+" ") for i in range(3))+'\n'
+    h2="".join(("|"+"|".join([' '*9 for _ in range(3)])+"|") for i in range(3))+'\n'
+    for h in range(3):
+        for k in range(3):
+            file.write(h1+h2*2)
+            tmp="".join(("|"+"|".join(['    '+f"{grid[h*3+k][j*3+i]}"+'    ' for i in range(3)])+"|") for j in range(3))+'\n'
+            file.write(tmp)
+            file.write(h2*2)
+        file.write(h1)
+
+board=read()
+write_board(board)
