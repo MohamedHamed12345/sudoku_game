@@ -22,9 +22,11 @@ def read_board():
             lst[idx]=int(u)
     return grid 
 
-def write_board(grid):
-  
+def write_board(grid,idx=0):
+   
     file=open('sudoku_game.txt','w')
+    if idx==1:
+         file=open('gamesoltion.txt','w')
     h1="".join((" "+" ".join(['-'*9 for _ in range(3)])+" ") for i in range(3))+'\n'
     h2="".join(("|"+"|".join([' '*9 for _ in range(3)])+"|") for i in range(3))+'\n'
     for h in range(3):

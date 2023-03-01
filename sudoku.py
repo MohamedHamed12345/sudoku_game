@@ -1,29 +1,24 @@
 
+import os
 import random
-from time import time
+import time
+
+
 from file_operations import read_board , write_board
+soldir=os.path.dirname(os.path.realpath(__file__))+'/sudoku_game.txt'
 BOARD_SIZE = 9
 
 # Define the number of squares to remove for each difficulty level
-EASY_SQUARES = 30
-MEDIUM_SQUARES = 45
-HARD_SQUARES = 60
-EXTREME_SQUARES = 75
-file=open("ahmed.txt","w")
-
-# def create_board():return [[0]*9 for i in range(9)]
-
-def create_board():
-    board=[]
-    for i in range(9):
-        x=[]
-        for i in range(9):
-            x.append(0)
-        board.append(x)
-    return board
+d={
+'easy' :30,
+'medium' : 45,
+'hard' : 60,
+'extreme' :75,
+}
 
 
-def fill_sudoku(sudoku):
+def get_sudoku(sudoku):
+   
     for row in range(9):
         for col in range(9):
             if sudoku[row][col] == 0:
@@ -34,40 +29,20 @@ def fill_sudoku(sudoku):
                         num not in [sudoku[i][col] for i in range(9)] and
                         num not in [sudoku[i][j] for i in range(row//3*3, row//3*3+3) for j in range(col//3*3, col//3*3+3)]):
                         sudoku[row][col] = num
-                        if fill_sudoku(sudoku):
+                        if get_sudoku(sudoku):
                             return True
                         sudoku[row][col] = 0
                 return False
-    return True
-#called in text file by give it board from previous function 
-
-# def write_board(board):
-#     # Write the Sudoku board to a text file
-#     with open("sudoku_game.txt", 'w') as f:
-#         f.write('-' * 35 + '\n')
-#         for i in range(BOARD_SIZE):
-#             for j in range(BOARD_SIZE):
-#                 f.write(str(board[i][j]) + '  ')
-#                 if (j + 1) % 3 == 0 and j != BOARD_SIZE - 1:
-#                     f.write('||  ')
-            
-#             f.write('\n\n')
-#             if (i + 1) % 3 == 0 and i != BOARD_SIZE - 1:
-#                 f.write('-' * 35 + '\n')
-#         f.write('-' * 35 + '\n')
-      
-
+    return True  
 
 def get_difficulty_level():
-    """Get the difficulty level from the user."""
+   
     while True:
-        level = input('Please select difficulty level (easy, medium, hard, or extreme): ').lower()
-        if level in ['easy', 'medium', 'hard', 'extreme']:
-            return level
-        else:
-            print('Invalid input, please try again.')
-
-
+        level = input('Please select difficulty level (easy, medium, hard, or extreme) or exit : ').lower()
+        if level in d: return d[level]
+        elif level =='exit':exit()
+        else: print('Invalid input, please try again.')
+           
 def remove_squares(board, num_squares):
     """Remove a specified number of squares from the board."""
     squares = list(range(BOARD_SIZE ** 2))
@@ -78,14 +53,18 @@ def remove_squares(board, num_squares):
         col = square % BOARD_SIZE   ##1 to 9 only
         board[row][col] = "#"
 
-def check_solution(board):
+def check_solution(board,ref):
+    for i in range(9):
+        for j in range(9):
+            if ref[i][j]!='#' and  board[i][j]!= ref[i][j]:
+                print('you change the numbers')
+                return False
     rows = {}
     cols ={}
     board3x3 ={}
     for i in range(9):rows[i]=[];cols[i]=[]
     for i in range(3):
         for j in range(3):board3x3[(i,j)]=[]
-   
 
     for i in range(9):
         for j in range(9):
@@ -97,40 +76,41 @@ def check_solution(board):
             cols[j].append(board[i][j])
             board3x3[(i//3, j//3)].append(board[i][j])
     return True
-
+def ask(board):
+    x=input('do you want to see the answer Y or N ? ')
+    if x.lower()=='y':
+        write_board(board)
+        print('You can see the answer in file  ')
+        print(soldir)
 
 def main():
-    board = create_board()
-    fill_sudoku(board)
+    board = [[0]*9 for i in range(9)]
+    get_sudoku(board)
+    write_board(board,1)
+    ref=[i[:] for i in board]
     level = get_difficulty_level()
- 
-    if level == 'easy':
-        remove_squares(board, EASY_SQUARES)
-    elif level == 'medium':
-        remove_squares(board, MEDIUM_SQUARES)
-    elif level == 'hard':
-        remove_squares(board, HARD_SQUARES)
-    else:
-        remove_squares(board, EXTREME_SQUARES)
-    # print(board)
+    remove_squares(board, level)
     write_board(board)
     start = time.time()
-    print('you can write your solution in solution file and ')
-    x=input('enter  any letter  to continue')
+    print('you can write your solution in solution file with this root ')
+    print(soldir)
+    x=input('enter  y after finish or exit ')
+    if x=='exit':exit()
     end = time.time()
-    b=read_board()
-   
-    if len(b) !=9:
-        print(*b)
-        exit()
-       
-    if check_solution(b):
+    readedboard=read_board()
+    print(f"time taken :{round(end-start,3)} seconds")
+    if len(readedboard) !=9:
+        print(*readedboard)
+        ask(ref)
+        return
+
+    if check_solution(readedboard,board):
         print("right solution")
 
     else: 
         print('wrong solution')
-        print(board)
-    print(f"time taken :{end-start} seconds")
+        ask(ref)
+   
    
 
 
