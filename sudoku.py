@@ -1,11 +1,10 @@
 
-import os
+
 import random
 import time
 
 
 from file_operations import read_board , write_board
-soldir=os.path.dirname(os.path.realpath(__file__))+'/sudoku_game.txt'
 BOARD_SIZE = 9
 
 # Define the number of squares to remove for each difficulty level
@@ -51,22 +50,23 @@ def remove_squares(board, num_squares):
         square = squares[i]
         row = square // BOARD_SIZE  #1 to 9 only
         col = square % BOARD_SIZE   ##1 to 9 only
-        board[row][col] = "#"
+        board[row][col] = " "
 
-def check_solution(board,ref):
+def check_solution(board,remboard):
     for i in range(9):
         for j in range(9):
-            if ref[i][j]!='#' and  board[i][j]!= ref[i][j]:
+            if remboard[i][j]!=' ' and  board[i][j]!= remboard[i][j]:
                 print('you change the numbers')
                 return False
     rows = {}
     cols ={}
     board3x3 ={}
     for i in range(9):rows[i]=[];cols[i]=[]
+
     for i in range(3):
         for j in range(3):board3x3[(i,j)]=[]
 
-    for i in range(9):
+    for i in range(9): 
         for j in range(9):
             element=board[i][j]
             
@@ -76,31 +76,35 @@ def check_solution(board,ref):
             cols[j].append(board[i][j])
             board3x3[(i//3, j//3)].append(board[i][j])
     return True
+
+
 def ask(board):
     x=input('do you want to see the answer Y or N ? ')
     if x.lower()=='y':
-        write_board(board)
         print('You can see the answer in file  ')
-        print(soldir)
+        write_board(board,'solution.txt')
+   
 
 def main():
-    board = [[0]*9 for i in range(9)]
+
+    board = [[0]*9 for _ in range(9)]
     get_sudoku(board)
-    write_board(board,1)
+    write_board(board,'gamesolution.txt')
     ref=[i[:] for i in board]
     level = get_difficulty_level()
     remove_squares(board, level)
-    write_board(board)
-    start = time.time()
     print('you can write your solution in solution file with this root ')
-    print(soldir)
+    write_board(board,'sudoku_game.txt')
+    
+   
+    start = time.time()
     x=input('enter  y after finish or exit ')
     if x=='exit':exit()
     end = time.time()
     readedboard=read_board()
     print(f"time taken :{round(end-start,3)} seconds")
     if len(readedboard) !=9:
-        print(*readedboard)
+     
         ask(ref)
         return
 
@@ -111,28 +115,34 @@ def main():
         print('wrong solution')
         ask(ref)
    
-   
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 if __name__=="__main__":    
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("KeyboardInterrupt")
+        print('Game over')
+        exit()
+    except ValueError():
+        print("value error")
+        print("there are unfonund value")
+        print('Game over')
+        exit()
     while True:
-        x=input('Do you want to play again :Y or N ?')
-        if x.lower()=='y':
-            main()
+        try:
+            x=input('Do you want to play again :Y or N ?')
+            if x.lower()=='y':
+           
+                main()
+        except KeyboardInterrupt:
+                print('Game over')
+                exit()
         else:
             print('Game over')
             break
         
+
+
+
