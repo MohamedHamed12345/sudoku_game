@@ -1,5 +1,6 @@
 
 import random
+from time import time
 from file_operations import read_board , write_board
 BOARD_SIZE = 9
 
@@ -113,10 +114,10 @@ def main():
         remove_squares(board, EXTREME_SQUARES)
     # print(board)
     write_board(board)
+    start = time.time()
     print('you can write your solution in solution file and ')
-    
     x=input('enter  any letter  to continue')
-
+    end = time.time()
     b=read_board()
    
     if len(b) !=9:
@@ -129,7 +130,7 @@ def main():
     else: 
         print('wrong solution')
         print(board)
-  
+    print(f"time taken :{end-start} seconds")
    
 
 
