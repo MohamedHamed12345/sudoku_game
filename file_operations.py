@@ -1,20 +1,4 @@
-import sudoku
-
-def write_board(board,filename):
-  
-    file=open(filename,'w')
-    h1="".join((" "+" ".join(['-'*9 for _ in range(3)])+" ") for i in range(3))+'\n'
-    h2="".join(("|"+"|".join([' '*9 for _ in range(3)])+"|") for i in range(3))+'\n'
-    for h in range(3):
-        for k in range(3):
-            file.write(h1+h2*2)
-            tmp="".join(("|"+"|".join(['    '+f"{board[h*3+k][j*3+i]}"+'    ' for i in range(3)])+"|") for j in range(3))+'\n'
-            file.write(tmp)
-            file.write(h2*2)
-        file.write(h1)
-    print(__file__.replace("file_operations.py",filename))             
-                 
-def read():
+def read_board():
     file=open('sudoku_game.txt','r',encoding='utf-8',errors='ignore')
     ze_lines=file.read().splitlines()
     board=[]
@@ -30,64 +14,46 @@ def read():
         if(len(x)==9):
             x=[]
         for i in range(9):
-            x.append(l[j])
+            x.append(int(l[j]))
             j+=1
         board.append(x) 
+    # print(board)
     return board
-                
-            
 
-def main():
+# def read_board():
+#     grid=[]
+#     file=open('sudoku_game.txt', 'r')
+#     for line in file:
+#         if '-' in line:break
+#     lst=[-1]*9
+#     for l in file: 
+#         line=l.replace('||','|').replace(' ','').strip()[1:-1].split('|')
     
-  board = sudoku.create_board()
+#         if '-' in line[0]:
+#             # if -1 in lst:
+#             #     return ["unfound value "]
+#             grid.append(lst);lst=[-1]*9
+#             if len(grid)%3==0:file.readline()
+#             continue
+        
+#         for idx, unti in enumerate(line):
+#             u=unti.strip()
+#             if  u=='' :    continue
+#             # if not u.isdigit():
+#             #     return ["value not a number"]
+#             lst[idx]=int(u)
+#     return grid 
 
-  sudoku.fill_sudoku(board)
-  correct_ans = []
-
-  for row in board:
-    new_row = []
-    for item in row:
-        new_row.append(item)
-    correct_ans.append(new_row)
-
-  level = sudoku.get_difficulty_level()
-
-  if level == 'easy':
-    sudoku.remove_squares(board, sudoku.EASY_SQUARES)
-  elif level == 'medium':
-     sudoku.remove_squares(board, sudoku.MEDIUM_SQUARES)
-  elif level == 'hard':
-    sudoku.remove_squares(board, sudoku.HARD_SQUARES)
-  else:
-     sudoku.remove_squares(board, sudoku.EXTREME_SQUARES)
-  write_board(board,'sudoku_game.txt')    
-  x=input(" enter y if you have finish : ")
-  if x == 'y':
-     user_sol=read()
-  flag=sudoku.check_solution(user_sol)  
-  if flag== True:
-     print("your sol is true")
-  elif flag== False:
-     print("your sol is false")
-  ask=input("do you want the answer: y or n")
-  if ask=='y':
-     write_board(correct_ans, "solution.txt")
-     
-  else:
-     print("as you like ya غالي ")
- 
-     
- 
- 
-main() 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+def write_board(grid,filename):
+    file=open(filename,'w')
+    h1="".join((" "+" ".join(['-'*9 for _ in range(3)])+" ") for i in range(3))+'\n'
+    h2="".join(("|"+"|".join([' '*9 for _ in range(3)])+"|") for i in range(3))+'\n'
+    for h in range(3):
+        for k in range(3):
+            file.write(h1+h2*2)
+            tmp="".join(("|"+"|".join(['    '+f"{grid[h*3+k][j*3+i]}"+'    ' for i in range(3)])+"|") for j in range(3))+'\n'
+            file.write(tmp)
+            file.write(h2*2)
+        file.write(h1)
+    if filename!='gamesolution.txt': print(__file__.replace("file_operations.py",filename))      
+    file.close()
